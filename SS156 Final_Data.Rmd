@@ -73,19 +73,21 @@ synth.tables$tab.pred[4:6, ]
 ```
 
 ```{r}
-path.plot(synth.res = synth.out,
+# jpeg(file="sc_plot.jpeg")
+sc_plot <- path.plot(synth.res = synth.out,
           dataprep.res = dataprep.out,
           Ylab = "GDP",
           Xlab = "Year",
           Legend = c("UK","synthetic UK"),
           Legend.position = "bottomright"
 )
-# add line x=2007
 abline(v=2005, col="red", lty=2)
 abline(v=2012, col="#110b75", lty=2)
-# save plot
-library(ggplot2)
-ggsave("path_plot1.png", width = 10, height = 6)
+# dev.off()
+sc_plot
+```
+
+```{r}
 ```
 
 ```{r}
