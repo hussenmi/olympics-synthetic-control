@@ -301,5 +301,14 @@ data_out <-
   generate_control()
 
 data_out %>% plot_trends()
+data_out %>% plot_differences()
+data_out %>% plot_weights()
+data_out %>% grab_balance_table()
+data_out %>% plot_placebos()
+data_out %>% plot_mspe_ratio()
+data_out %>% plot_placebos(prune=FALSE)
+data_out %>% grab_significance()
+data_out %>% grab_synthetic_control()
+data_out %>% grab_synthetic_control(placebo = T)
 ```
 
