@@ -4,13 +4,21 @@ output: html_document
 date: '2023-04-16'
 ---
 ```{r}
-# install.packages("Synth")
+# # old code we used for installing
+# instsall.packages('Synth')
+
+# # since the above Synth package was archived on Apr 14, 2023, 
+# # please use this code below instead
+devtools::install_github('cran/LowRankQP')
+devtools::install_github('cran/Synth')
 library(Synth)
 ```
 
-
 ```{r}
+# import data
 data = read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vR4WXnBGhkJZW8aBc6NM4fHGtoByhbLy_oSeFLW0Mm4K3CpBe_CQqf6JkxqtyxOzBZyQE0uP-fvL6dq/pub?gid=0&single=true&output=csv")
+
+# create a gdp percapita
 gdp_percapita <- data$gdp / data$population
 data$gdp_percapita <- gdp_percapita
 
