@@ -106,6 +106,7 @@ msperatio
 ```
 
 ```{r}
+# Attempt at manually performing the placebo test
 store <- matrix(NA,length(1990:2015),10)
 colnames(store) <- unique(data$country)[-1]
 
