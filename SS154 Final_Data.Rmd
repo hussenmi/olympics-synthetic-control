@@ -57,21 +57,7 @@ dataprep.out <-
              special.predictors = list(
                 list("gdp_percapita" , 1990 , "mean"),
                 list("gdp_percapita" , 1995 , "mean"),
-            #      list("gdp_percapita" , 2003 , "mean"),
-            #      list("gdp_percapita" , 2004 , "mean"),
                  list("gdp_percapita" , 2005 , "mean")
-            #      list("gdp_percapita" , 2006 , "mean"),
-            #      list("gdp_percapita" , 2007 , "mean"),
-            #      list("gdp_percapita" , 2008 , "mean"),
-            #      list("gdp" , 2003 , "mean"),
-            #      list("gdp" , 2004 , "mean"),
-            #      list("gdp" , 2005 , "mean"),
-            #      list("gdp" , 2006 , "mean"),
-            #      list("gdp" , 2007 , "mean"),
-            #      list("gdp" , 2008 , "mean"),
-            #      list("total_inland_transport_infrastructure_investment_per_GDP" , 2003 , "mean"),
-            #      list("total_inland_transport_infrastructure_investment_per_GDP" , 2004 , "mean"),
-            #      list("total_inland_transport_infrastructure_investment_per_GDP" , 2005 , "mean")
              ),
              treatment.identifier = 1,
              controls.identifier = c(2:11),
@@ -130,16 +116,6 @@ for(iter in 2:11) {
                        predictors = c("unemployment_rate" , "population" , "inflation_rate", "democarcy_level", "total_inland_transport_infrastructure_investment_per_GDP"),
                        predictors.op = "mean" ,
                        time.predictors.prior = 1990:2012,
-                    #    special.predictors = list(
-                    #      list("gdpcap" , 1960:1969 , "mean"),
-                    #      list("sec.agriculture" ,      seq(1961,1969,2), "mean"),
-                    #      list("sec.energy" ,           seq(1961,1969,2), "mean"),
-                    #      list("sec.industry" ,         seq(1961,1969,2), "mean"),
-                    #      list("sec.construction" ,     seq(1961,1969,2), "mean"),
-                    #      list("sec.services.venta" ,   seq(1961,1969,2), "mean"),
-                    #      list("sec.services.nonventa" ,seq(1961,1969,2), "mean"),
-                    #      list("popdens", 1969, "mean")
-                    #                             ),
                        dependent = "gdp",
                        unit.variable = "id",
                        unit.names.variable = "country",
@@ -151,30 +127,7 @@ for(iter in 2:11) {
                        )
 
 
-### Below is that extra bit of custom data-manipulation that you would ordinarily NEVER have to do-- Abadie did it.
 
-#  dataprep.out$X1["school.high",] <-
-#    dataprep.out$X1["school.high",] + dataprep.out$X1["school.post.high",]
-#  dataprep.out$X1 <-
-#    as.matrix(dataprep.out$X1[-which(rownames(dataprep.out$X1)=="school.post.high"),])
-#  dataprep.out$X0["school.high",] <-
-#    dataprep.out$X0["school.high",] + dataprep.out$X0["school.post.high",]
-#  dataprep.out$X0 <-
-#    dataprep.out$X0[-which(rownames(dataprep.out$X0)=="school.post.high"),]
-
-#  lowest  <- which(rownames(dataprep.out$X0)=="school.illit")
-#  highest <- which(rownames(dataprep.out$X0)=="school.high")
-
-#  dataprep.out$X1[lowest:highest,] <-
-#   (100*dataprep.out$X1[lowest:highest,]) /
-#    sum(dataprep.out$X1[lowest:highest,])
-#  dataprep.out$X0[lowest:highest,] <-
-#    100*scale(dataprep.out$X0[lowest:highest,],
-#              center=FALSE,
-#              scale=colSums(dataprep.out$X0[lowest:highest,])
-#   )
-     
-## THIS ENDS THE data manipulation part. Synth() runs:
 # run synth
 synth.out <- synth(
                    data.prep.obj = dataprep.out,
@@ -196,8 +149,7 @@ gap.end       <- nrow(storage)
 years         <- 1990:2015
 gap.end.pre  <- which(rownames(storage)=="2012")
 
-#  MSPE Pre-Treatment -- this is where we eliminate bad placebo models... just like in the California paper...
-# Exclude states with 5 times higher MSPE than basque
+
 mse        <-             apply(storage[ gap.start:gap.end.pre,]^2,2,mean)
 data.mse <- as.numeric(mse[10])
 storage <- storage[,mse<5*data.mse]
@@ -213,7 +165,6 @@ plot(years,storage[gap.start:gap.end,which(colnames(storage)=="UK")],
 # Add lines for control states
 for (i in 1:ncol(storage)) { lines(years,storage[gap.start:gap.end,i],col="gray") }
 
-## Add Basque Line
 lines(years,storage[gap.start:gap.end,which(colnames(storage)=="UK")],lwd=2,col="black")
 
 # Add grid
@@ -231,7 +182,6 @@ abline(h=3)
 
 mse.pre <- apply(storage[ gap.start:gap.end.pre, ]^2,2,mean)
 mse.pre
-## MSE Post---I had to write this myself
 post.tmt.years <- c((gap.end.pre+1):gap.end)
 mse.post <- apply(storage[post.tmt.years, ]^2,2,mean)
 cat("\n\n")
@@ -283,21 +233,8 @@ data_out <-
                      inf_rate = mean(inflation_rate, na.rm = T),
                      demo_level = mean(democarcy_level, na.rm = T),
                      total_inland_transport_infrastructure_investment_per_GDP = mean(total_inland_transport_infrastructure_investment_per_GDP, na.rm = T)) %>%
-                    #  ln_income = mean(lnincome, na.rm = T),
-                    #  ret_price = mean(retprice, na.rm = T),
-                    #  youth = mean(age15to24, na.rm = T)) %>%
   
-#   # average beer consumption in the donor pool from 1984 - 1988
-#   generate_predictor(time_window = 1984:1988,
-#                      beer_sales = mean(beer, na.rm = T)) %>%
-  
-#   # Lagged cigarette sales 
-#   generate_predictor(time_window = 1975,
-#                      cigsale_1975 = cigsale) %>%
-#   generate_predictor(time_window = 1980,
-#                      cigsale_1980 = cigsale) %>%
-#   generate_predictor(time_window = 1988,
-#                      cigsale_1988 = cigsale) %>%
+
   
   
   # Generate the fitted weights for the synthetic control
